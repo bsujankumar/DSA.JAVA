@@ -1,4 +1,4 @@
-//Binary tress
+//Binary tress part 1
 /* is a hierarchical data structure
    each node at max have 2 childs
 */
@@ -127,6 +127,37 @@ public class code19{
             int rs = sum(root.right);
             return ls + rs + root.data;
         }
+        //Approach 1: diameter of the tree [O(n**2)] : no of nodes in the longest path between the 2 leaves
+        public int diameter(Node root){
+            if(root == null){
+                return 0;
+            }
+            int ld = diameter(root.left);
+            int lh = height(root.left);
+            int rd = diameter(root.right);
+            int rh = height(root.right);
+            int sd = lh + rh + 1;
+            return Math.max(Math.max(ld, rd), sd);
+        }
+        //Approach 2: diameter of the tree [O(n)] : caluclating diameter and height together
+        static class info{
+            int dia;
+            int ht;
+            info(int dia, int ht){
+                this.dia = dia;
+                this.ht = ht;
+            }
+        }
+        public info Diameter(Node root){
+            if(root == null){
+                return new info(0, 0);
+            }
+            info leftinfo = Diameter(root.left);
+            info rightinfo = Diameter(root.right);
+            int dia = Math.max(Math.max(leftinfo.dia, rightinfo.dia) , leftinfo.ht + rightinfo.ht + 1);
+            int ht = Math.max(leftinfo.ht, rightinfo.ht) + 1;
+            return new info(dia , ht);
+        }
     }
     public static void main(String args[]){
         int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, 6, -1, -1, 7};
@@ -151,5 +182,13 @@ public class code19{
         System.out.println("Number of nodes in Binary tree is "+tree.count(root));
         //sum of nodes of the binary tree
         System.out.println("Sum of nodes in Binary tree is "+tree.sum(root));
+        //diameter of the tree (appraoch 1)
+        System.out.println("Diameter of the Binary tree is "+tree.diameter(root));
+        //Diameter of the tree (approach 2)
+        System.out.println("Diameter of the Binary tree is "+tree.Diameter(root).dia);   
+        /*tree.Diameter(root) return an object of class info , 
+          tree.Diameter(root).dia return daimeter of the object in class info 
+          tree.Diameter(root).ht return daimeter of the object in class info 
+        */
     }
 }
